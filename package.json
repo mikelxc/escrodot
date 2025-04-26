@@ -1,10 +1,10 @@
 {
-  "name": "my-polkadot-dapp",
+  "name": "escrodot",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "remixd": "npx remixd -s ./contracts -u https://remix.polkadot.io",
+    "remixd": "remixd -s ./contracts -u https://remix.polkadot.io",
     "contracts:export": "pnpm --filter=contracts export",
     "contracts:build": "pnpm --filter=contracts build",
     "contracts:deploy": "pnpm --filter=contracts deploy-contracts",

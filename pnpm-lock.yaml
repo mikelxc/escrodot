@@ -18,26 +18,26 @@ importers:
   contracts:
     devDependencies:
       '@parity/revive':
-        specifier: ^0.0.7
-        version: 0.0.7
+        specifier: ^0.0.21
+        version: 0.0.21
       '@polkadot-labs/hdkd':
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.0.13
+        version: 0.0.13
       '@polkadot-labs/hdkd-helpers':
-        specifier: ^0.0.10
-        version: 0.0.10
+        specifier: ^0.0.13
+        version: 0.0.13
       '@scure/bip32':
-        specifier: ^1.6.1
-        version: 1.6.1
+        specifier: ^1.7.0
+        version: 1.7.0
       '@scure/bip39':
-        specifier: ^1.5.1
-        version: 1.5.1
+        specifier: ^1.6.0
+        version: 1.6.0
       ethers:
-        specifier: ^6.13.4
-        version: 6.13.4
+        specifier: ^6.13.7
+        version: 6.13.7
       micro-sr25519:
-        specifier: ^0.1.0
-        version: 0.1.0
+        specifier: ^0.1.3
+        version: 0.1.3
 
   frontend:
     dependencies:
@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../contracts
       ethers:
-        specifier: ^6.13.4
-        version: 6.13.4
+        specifier: ^6.13.7
+        version: 6.13.7
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -553,12 +553,12 @@ packages:
   '@noble/curves@1.4.2':
     resolution: {integrity: sha512-TavHr8qycMChk8UwMld0ZDRvatedkzWfH8IiaeGCfymOP5i0hSCozz9vHOL0nkwk7HRMlFnAiKpS2jrUmSybcw==}
 
-  '@noble/curves@1.7.0':
-    resolution: {integrity: sha512-UTMhXK9SeDhFJVrHeUJ5uZlI6ajXg10O6Ddocf9S6GjbSBVZsJo88HzKwXznNfGpMTRDyJkqMjNDPYgf0qFWnw==}
-    engines: {node: ^14.21.3 || >=16}
-
   '@noble/curves@1.8.0':
     resolution: {integrity: sha512-j84kjAbzEnQHaSIhRPUmB3/eVXu2k3dKPl2LOrR8fSOIL+89U+7lV117EWHtq/GHM3ReGHM46iRBdZfpc4HRUQ==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/curves@1.9.0':
+    resolution: {integrity: sha512-7YDlXiNMdO1YZeH6t/kvopHHbIZzlxrCV9WLqCY6QhcXOoXiNCMDqJIglZ9Yjx5+w7Dz30TITFrlTjnRg7sKEg==}
     engines: {node: ^14.21.3 || >=16}
 
   '@noble/hashes@1.3.2':
@@ -569,16 +569,16 @@ packages:
     resolution: {integrity: sha512-V1JJ1WTRUqHHrOSh597hURcMqVKVGL/ea3kv0gSnEdsEZ0/+VyPghM1lMNGc00z7CIQorSvbKpuJkxvuHbvdbg==}
     engines: {node: '>= 16'}
 
-  '@noble/hashes@1.6.0':
-    resolution: {integrity: sha512-YUULf0Uk4/mAA89w+k3+yUYh6NrEvxZa5T6SY3wlMvE2chHkxFUUIDI8/XW1QSC357iA5pSnqt7XEhvFOqmDyQ==}
-    engines: {node: ^14.21.3 || >=16}
-
-  '@noble/hashes@1.6.1':
-    resolution: {integrity: sha512-pq5D8h10hHBjyqX+cfBm0i8JUXJ0UhczFc4r74zbuT9XgewFo2E3J1cOaGtdZynILNmQ685YWGzGE1Zv6io50w==}
-    engines: {node: ^14.21.3 || >=16}
-
   '@noble/hashes@1.7.0':
     resolution: {integrity: sha512-HXydb0DgzTpDPwbVeDGCG1gIu7X6+AuU6Zl6av/E/KG8LMsvPntvq+w17CHRpKBmN6Ybdrt1eP3k4cj8DJa78w==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.7.2':
+    resolution: {integrity: sha512-biZ0NUSxyjLLqo6KxEJ1b+C2NAx0wtDoFvCaXHGgUkeHzf3Xc1xKumFKREuT7f7DARNZ/slvYUwFG6B0f2b6hQ==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.8.0':
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -593,8 +593,9 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@parity/revive@0.0.7':
-    resolution: {integrity: sha512-6pmKzocIfZQ8paLvbMzSQ9AXXkRBwB53BHHPLeJd2DX+9LBftfb/rMemidaHZiIUtwRhWC5pQ5U2Ua0rt4syZQ==}
+  '@parity/revive@0.0.21':
+    resolution: {integrity: sha512-D1GCsw+wJ42P9XND1ZNPxeY7dnbKtLn1Zcqwe7JOXo1c3+BIx+YOnrtJKlZ0kWBVBpeH5XlRFzv58EUsBIEu9w==}
+    hasBin: true
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -612,11 +613,11 @@ packages:
     resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
 
-  '@polkadot-labs/hdkd-helpers@0.0.10':
-    resolution: {integrity: sha512-wBKenhN7TjNiMXxBvQWzFf+su8xTaRGqyOKAlAfpyY9oWTOt3G05yMvDHEZ4g/NRLoE4P3fQYQ0bdcMKl7KkDw==}
+  '@polkadot-labs/hdkd-helpers@0.0.13':
+    resolution: {integrity: sha512-70Py+++jOvmSO6ncANHnDK70QA1JNCDE0EifqNApcPC6XWR/tNhOxxgqo6PqKF0gwgNi0u+mMa0dzRERu3PP9Q==}
 
-  '@polkadot-labs/hdkd@0.0.10':
-    resolution: {integrity: sha512-jD8l+Ls/kZjvZja4T2Y0G6Be3rfGn0qNs3hvcNeV2CmOMtI7yRkkWPXI7WiJ8AyEoBwBuZt0rm6yzGla6o2HXQ==}
+  '@polkadot-labs/hdkd@0.0.13':
+    resolution: {integrity: sha512-ZdAFrvOzCf6gRsbUHZAlTe7XEPu/8BRMLscjtcde4wFfTLbQxVhMsUOuRWThIvFCe7D/7aaqHYWu7eRAbdPgKA==}
 
   '@remix-project/remix-lib@0.5.68':
     resolution: {integrity: sha512-NveSQY5nRK7RNpQWWUv24hjuwOBbcr5JVZmx/rW+HCKmctE/NO9tbB7bGqeiXsQDib2VaEewJ1n//2xxRNl8qw==}
@@ -747,17 +748,20 @@ packages:
   '@scure/base@1.2.1':
     resolution: {integrity: sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==}
 
+  '@scure/base@1.2.5':
+    resolution: {integrity: sha512-9rE6EOVeIQzt5TSu4v+K523F8u6DhBsoZWPGKlnCshhlDhy0kJzUX4V+tr2dWmzF1GdekvThABoEQBGBQI7xZw==}
+
   '@scure/bip32@1.4.0':
     resolution: {integrity: sha512-sVUpc0Vq3tXCkDGYVWGIZTRfnvu8LoTDaev7vbwh0omSvVORONr960MQWdKqJDCReIEmTj3PAr73O3aoxz7OPg==}
 
-  '@scure/bip32@1.6.1':
-    resolution: {integrity: sha512-jSO+5Ud1E588Y+LFo8TaB8JVPNAZw/lGGao+1SepHDeTs2dFLurdNIAgUuDlwezqEjRjElkCJajVrtrZaBxvaQ==}
+  '@scure/bip32@1.7.0':
+    resolution: {integrity: sha512-E4FFX/N3f4B80AKWp5dP6ow+flD1LQZo/w8UnLGYZO674jS6YnYeepycOOksv+vLPSpgN35wgKgy+ybfTb2SMw==}
 
   '@scure/bip39@1.3.0':
     resolution: {integrity: sha512-disdg7gHuTDZtY+ZdkmLpPCk7fxZSu3gBiEGuoC1XYxv9cGx3Z6cpTggCgW6odSOOIXCiDjuGejW+aJKCY/pIQ==}
 
-  '@scure/bip39@1.5.1':
-    resolution: {integrity: sha512-GnlufVSP9UdAo/H2Patfv22VTtpNTyfi+I3qCKpvuB5l1KWzEYx+l2TNpBy9Ksh4xTs3Rn06tBlpWCi/1Vz8gw==}
+  '@scure/bip39@1.6.0':
+    resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
 
   '@sindresorhus/is@0.14.0':
     resolution: {integrity: sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==}
@@ -1114,6 +1118,10 @@ packages:
   command-exists@1.2.9:
     resolution: {integrity: sha512-LTQ/SGc+s0Xc0Fu5WaKnR0YiygZkm9eKFvyS+fRsU7/ZWFF8ykFM6Pc9aCVf1+xasOOZpO3BAVgVrKvsqKHV7w==}
 
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
+    engines: {node: '>=18'}
+
   commander@4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
     engines: {node: '>= 6'}
@@ -1346,8 +1354,8 @@ packages:
   ethers@5.7.2:
     resolution: {integrity: sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==}
 
-  ethers@6.13.4:
-    resolution: {integrity: sha512-21YtnZVg4/zKkCQPjrDj38B1r4nQvTZLopUGMLQ1ePU2zV/joCfDC3t3iKQjWRzjjjbzR+mdAIoikeBRNkdllA==}
+  ethers@6.13.7:
+    resolution: {integrity: sha512-qbaJ0uIrjh+huP1Lad2f2QtzW5dcqSVjIzVH6yWB4dKoMuj2WqYz5aMeeQTCNpAKgTJBM5J9vcc2cYJ23UAimQ==}
     engines: {node: '>=14.0.0'}
 
   ethjs-util@0.1.6:
@@ -1855,8 +1863,8 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  micro-sr25519@0.1.0:
-    resolution: {integrity: sha512-at5zfxiKNhh07v4GPb8Sc6wCW+jd18FMMgPM0ACIQMcgvMfB9a34mfOlXr5B04J4yFZ6imlvJfRaFbOxMA7ytw==}
+  micro-sr25519@0.1.3:
+    resolution: {integrity: sha512-Tw1I3Yjq9XySsU3hsgPVkQTG3NIje070VUWtT4tb9d1tVwQqpCIBH4SM5h4Mxp2Ua4PUyPsot2F40eyJ0QnzTg==}
 
   micromatch@3.1.10:
     resolution: {integrity: sha512-MWikgl9n9M3w+bpsY3He8L+w9eF9338xRl8IAO5viDizwSzziFEyUzo2xrrloB64ADbTf8uA8vRqqttDTOmccg==}
@@ -2314,9 +2322,9 @@ packages:
     engines: {node: '>=10.0.0'}
     hasBin: true
 
-  solc@0.8.28:
-    resolution: {integrity: sha512-AFCiJ+b4RosyyNhnfdVH4ZR1+TxiL91iluPjw0EJslIu4LXGM9NYqi2z5y8TqochC4tcH9QsHfwWhOIC9jPDKA==}
-    engines: {node: '>=10.0.0'}
+  solc@0.8.29:
+    resolution: {integrity: sha512-M1hmcsejAtT1RWC+wy45Oi8a82nSnDl65wDzA3/8uWTC7R7VcnrMVIHv6/LHqnQPZ7OM2RIeKh3zpNo4E5lYbw==}
+    engines: {node: '>=12.0.0'}
     hasBin: true
 
   source-map-js@1.2.1:
@@ -2995,7 +3003,7 @@ snapshots:
       '@ethereumjs/statemanager': 2.4.0
       '@ethereumjs/tx': 5.4.0
       '@ethereumjs/util': 9.1.0
-      '@noble/curves': 1.7.0
+      '@noble/curves': 1.8.0
       '@types/debug': 4.1.12
       debug: 4.4.0
       ethereum-cryptography: 2.2.1
@@ -3362,23 +3370,23 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.4.0
 
-  '@noble/curves@1.7.0':
-    dependencies:
-      '@noble/hashes': 1.6.0
-
   '@noble/curves@1.8.0':
     dependencies:
       '@noble/hashes': 1.7.0
+
+  '@noble/curves@1.9.0':
+    dependencies:
+      '@noble/hashes': 1.8.0
 
   '@noble/hashes@1.3.2': {}
 
   '@noble/hashes@1.4.0': {}
 
-  '@noble/hashes@1.6.0': {}
-
-  '@noble/hashes@1.6.1': {}
-
   '@noble/hashes@1.7.0': {}
+
+  '@noble/hashes@1.7.2': {}
+
+  '@noble/hashes@1.8.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -3392,11 +3400,12 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
-  '@parity/revive@0.0.7':
+  '@parity/revive@0.0.21':
     dependencies:
       '@types/node': 22.10.2
+      commander: 13.1.0
       package-json: 10.0.1
-      solc: 0.8.28
+      solc: 0.8.29
     transitivePeerDependencies:
       - debug
 
@@ -3415,17 +3424,17 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@polkadot-labs/hdkd-helpers@0.0.10':
+  '@polkadot-labs/hdkd-helpers@0.0.13':
     dependencies:
-      '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
-      '@scure/base': 1.2.1
-      micro-sr25519: 0.1.0
+      '@noble/curves': 1.9.0
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.5
+      micro-sr25519: 0.1.3
       scale-ts: 1.6.1
 
-  '@polkadot-labs/hdkd@0.0.10':
+  '@polkadot-labs/hdkd@0.0.13':
     dependencies:
-      '@polkadot-labs/hdkd-helpers': 0.0.10
+      '@polkadot-labs/hdkd-helpers': 0.0.13
 
   '@remix-project/remix-lib@0.5.68(typescript@5.6.3)(zod@3.24.1)':
     dependencies:
@@ -3605,27 +3614,29 @@ snapshots:
 
   '@scure/base@1.2.1': {}
 
+  '@scure/base@1.2.5': {}
+
   '@scure/bip32@1.4.0':
     dependencies:
       '@noble/curves': 1.4.2
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.9
 
-  '@scure/bip32@1.6.1':
+  '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.8.0
-      '@noble/hashes': 1.7.0
-      '@scure/base': 1.2.1
+      '@noble/curves': 1.9.0
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.5
 
   '@scure/bip39@1.3.0':
     dependencies:
       '@noble/hashes': 1.4.0
       '@scure/base': 1.1.9
 
-  '@scure/bip39@1.5.1':
+  '@scure/bip39@1.6.0':
     dependencies:
-      '@noble/hashes': 1.7.0
-      '@scure/base': 1.2.1
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.5
 
   '@sindresorhus/is@0.14.0': {}
 
@@ -4069,6 +4080,8 @@ snapshots:
 
   command-exists@1.2.9: {}
 
+  commander@13.1.0: {}
+
   commander@4.1.1: {}
 
   commander@8.3.0: {}
@@ -4355,7 +4368,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  ethers@6.13.4:
+  ethers@6.13.7:
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.2.0
@@ -4855,10 +4868,10 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  micro-sr25519@0.1.0:
+  micro-sr25519@0.1.3:
     dependencies:
-      '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
+      '@noble/curves': 1.8.0
+      '@noble/hashes': 1.7.2
 
   micromatch@3.1.10:
     dependencies:
@@ -5335,7 +5348,7 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  solc@0.8.28:
+  solc@0.8.29:
     dependencies:
       command-exists: 1.2.9
       commander: 8.3.0
