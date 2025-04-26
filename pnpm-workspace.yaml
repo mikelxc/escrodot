@@ -1,0 +1,6 @@
+packages:
+  - contracts
+  - frontend
+onlyBuiltDependencies:
+  - esbuild
+  - fsevents
