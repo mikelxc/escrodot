@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-
+import React from "react"
 import { useState } from "react"
 import {
   Dialog,
@@ -16,6 +15,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
+import { useWriteContract, useAccount, useWaitForTransactionReceipt, usePublicClient } from 'wagmi'
+import { escroDotFactoryConfig } from "contracts"
+import { parseEther, isAddress } from 'viem'
+import { Loader2 } from "lucide-react"
+import Link from "next/link"
 
 interface CreateServiceModalProps {
   open: boolean
@@ -25,12 +29,26 @@ interface CreateServiceModalProps {
 export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalProps) {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined)
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
     gatewayUrl: "",
+    gatewaySigner: "",
   })
+  const { address } = useAccount()
+  const { writeContract, isPending } = useWriteContract()
+  const publicClient = usePublicClient()
+
+  const { data: receipt } = useWaitForTransactionReceipt({
+    hash: txHash,
+    query: {
+      enabled: !!txHash,
+    }
+  })
+
+  const priceInWei = formData.price ? parseEther(formData.price) : parseEther("0")
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -41,7 +59,7 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
     e.preventDefault()
 
     // Basic validation
-    if (!formData.name || !formData.description || !formData.price || !formData.gatewayUrl) {
+    if (!formData.name || !formData.description || !formData.price || !formData.gatewayUrl || !formData.gatewaySigner) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -50,44 +68,102 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
       return
     }
 
+    if (!address) {
+      toast({
+        title: "Error",
+        description: "Please connect your wallet first",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (!isAddress(formData.gatewaySigner)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid gateway signer address",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (!publicClient) {
+      toast({
+        title: "Error",
+        description: "Failed to initialize client. Please try again.",
+        variant: "destructive",
+      })
+      return
+    }
+
     setIsLoading(true)
 
-    // Simulate transaction
-    setTimeout(() => {
-      setIsLoading(false)
-      onOpenChange(false)
+    try {
+      // First simulate the transaction
+      const simulation = await publicClient.simulateContract({
+        ...escroDotFactoryConfig,
+        functionName: 'createService',
+        args: [
+          formData.name,
+          priceInWei,
+          formData.gatewayUrl,
+          formData.gatewaySigner as `0x${string}`,
+          formData.description
+        ],
+        value: priceInWei,
+        account: address,
+      })
 
+      if (!simulation?.request) {
+        toast({
+          title: "Error",
+          description: "Failed to simulate transaction. Please try again.",
+          variant: "destructive",
+        })
+        setIsLoading(false)
+        return
+      }
+
+      // If simulation succeeds, send the actual transaction
+      await writeContract(simulation.request)
+      // The transaction hash will be available in the receipt when the transaction is mined
+    } catch (error) {
+      console.error('Error creating service:', error)
       toast({
-        title: "Service created!",
-        description: `Your service "${formData.name}" has been created successfully.`,
+        title: "Error",
+        description: "Failed to create service. Please check your inputs and try again.",
+        variant: "destructive",
       })
-
-      // Reset form
-      setFormData({
-        name: "",
-        description: "",
-        price: "",
-        gatewayUrl: "",
-      })
-    }, 2000)
-
-    // In a real implementation, you would use wagmi hooks:
-    // const { writeContract } = useWriteContract()
-    // try {
-    //   const hash = await writeContract({
-    //     address: CONTRACT_ADDRESS,
-    //     abi: CONTRACT_ABI,
-    //     functionName: 'createService',
-    //     args: [formData.price, formData.gatewayUrl]
-    //   })
-    //   // Handle success
-    // } catch (error) {
-    //   // Handle error
-    // }
+      setIsLoading(false)
+    }
   }
 
-  // Calculate required stake (2x the price)
-  const requiredStake = formData.price ? (Number.parseFloat(formData.price) * 2).toFixed(2) : "0.00"
+  // Handle transaction status changes
+  React.useEffect(() => {
+    if (receipt) {
+      setTxHash(receipt.transactionHash)
+      setIsLoading(false)
+      onOpenChange(false)
+      toast({
+        title: "Service created!",
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Your service "{formData.name}" has been created successfully.</p>
+            <Link 
+              href={`https://westend.subscan.io/extrinsic/${receipt.transactionHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-pink-500 hover:underline"
+            >
+              View transaction on Subscan
+            </Link>
+          </div>
+        ),
+      })
+    }
+  }, [receipt, formData.name, onOpenChange, toast])
+
+  // Calculate required stake 
+  const requiredStake = formData.price ? (Number.parseFloat(formData.price)).toFixed(2) : "0.00"
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -149,13 +225,25 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="gatewaySigner">Gateway Signer</Label>
+            <Input
+              id="gatewaySigner"
+              name="gatewaySigner"
+              placeholder="0x0000000000000000000000000000000000000000"
+              value={formData.gatewaySigner}
+              onChange={handleChange}
+              className="bg-black border-gray-800 focus-visible:ring-pink-500"
+            />
+          </div>
+
           <div className="rounded-md bg-pink-500/10 p-4 border border-pink-500/20">
             <h4 className="font-medium mb-2">Stake Requirement</h4>
             <p className="text-sm text-gray-300">
               Required stake: <span className="font-bold text-pink-500">{requiredStake} WND</span>
             </p>
             <p className="text-xs text-gray-400 mt-1">
-              You must have at least 2x the service price staked to create this service.
+              You must have at least the service price staked to create this service.
             </p>
           </div>
         </form>
@@ -164,8 +252,20 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
           <Button variant="outline" onClick={() => onOpenChange(false)} className="border-gray-800">
             Cancel
           </Button>
-          <Button type="submit" onClick={handleSubmit} className="bg-pink-500 hover:bg-pink-600" disabled={isLoading}>
-            {isLoading ? "Creating..." : "Create Service"}
+          <Button 
+            type="submit" 
+            onClick={handleSubmit} 
+            className="bg-pink-500 hover:bg-pink-600" 
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : (
+              "Create Service"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
