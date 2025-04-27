@@ -1,0 +1,696 @@
+{
+	"compiler": {
+		"version": "0.8.28+commit.7893614a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_factory",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_serviceId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "_provider",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_gateway",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "_gatewaySigner",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_description",
+						"type": "string"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "ECDSAInvalidSignature",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					}
+				],
+				"name": "ECDSAInvalidSignatureLength",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"name": "ECDSAInvalidSignatureS",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "sender",
+						"type": "address"
+					},
+					{
+						"internalType": "string[]",
+						"name": "urls",
+						"type": "string[]"
+					},
+					{
+						"internalType": "bytes",
+						"name": "callData",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "callbackFunction",
+						"type": "bytes4"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "OffchainLookup",
+				"type": "error"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					}
+				],
+				"name": "DisputeRaised",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "deliverableHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "OffchainDelivery",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					}
+				],
+				"name": "PaymentClaimed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "ServicePurchased",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "buyService",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "response",
+						"type": "bytes"
+					},
+					{
+						"internalType": "bytes",
+						"name": "extraData",
+						"type": "bytes"
+					}
+				],
+				"name": "ccipCallback",
+				"outputs": [
+					{
+						"internalType": "bytes",
+						"name": "",
+						"type": "bytes"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes",
+						"name": "userInput",
+						"type": "bytes"
+					}
+				],
+				"name": "checkDelivery",
+				"outputs": [],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "deliverableHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "claimDigest",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "deliverableHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "buyerSignature",
+						"type": "bytes"
+					}
+				],
+				"name": "claimPayment",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "description",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "factory",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					}
+				],
+				"name": "factoryRefundBuyer",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					}
+				],
+				"name": "factoryReleaseToProvider",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "gateway",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "",
+						"type": "string"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "gatewaySigner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nextPurchaseId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "price",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "provider",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "purchases",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "claimed",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "disputed",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "resolved",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					}
+				],
+				"name": "raiseDispute",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "serviceId",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "newDescription",
+						"type": "string"
+					}
+				],
+				"name": "updateDescription",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "newGateway",
+						"type": "string"
+					}
+				],
+				"name": "updateGateway",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newSigner",
+						"type": "address"
+					}
+				],
+				"name": "updateGatewaySigner",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"author": "Mike Liu (mikelxc) /**",
+			"errors": {
+				"ECDSAInvalidSignature()": [
+					{
+						"details": "The signature derives the `address(0)`."
+					}
+				],
+				"ECDSAInvalidSignatureLength(uint256)": [
+					{
+						"details": "The signature has an invalid length."
+					}
+				],
+				"ECDSAInvalidSignatureS(bytes32)": [
+					{
+						"details": "The signature has an S value that is in the upper half order."
+					}
+				],
+				"OffchainLookup(address,string[],bytes,bytes4,bytes)": [
+					{
+						"details": "See EIP‑3668 for parameter semantics."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {
+				"buyService()": {
+					"returns": {
+						"purchaseId": " A unique identifier for this purchase."
+					}
+				},
+				"ccipCallback(bytes,bytes)": {
+					"details": "No state change other than the event emission so the provider can later claim."
+				},
+				"checkDelivery(uint256,bytes)": {
+					"params": {
+						"purchaseId": "Identifier of the purchase to query.",
+						"userInput": "Arbitrary payload forwarded to the gateway (e.g., API key, prompt). The caller MUST handle the OffchainLookup error, perform the HTTPS request(s) to the provided `gateway`, then call `ccipCallback` with the ABI‑encoded response."
+					}
+				},
+				"claimDigest(uint256,bytes32)": {
+					"details": "Compute the digest that a buyer must sign to authorise payment."
+				},
+				"claimPayment(uint256,bytes32,bytes)": {
+					"params": {
+						"buyerSignature": "ECDSA signature of the buyer over the claim digest.",
+						"deliverableHash": "Hash returned by the CCIP gateway (buyer has inspected).",
+						"purchaseId": "Identifier of the purchase to claim."
+					}
+				},
+				"constructor": {
+					"params": {
+						"_description": "Short text or IPFS CID describing the service.",
+						"_factory": "Address of the EscroDotFactory contract.",
+						"_gateway": "HTTPS/IPFS URL implementing the CCIP‑Read spec.",
+						"_gatewaySigner": "Address of the CCIP‑Read gateway signer.",
+						"_price": "Fixed price per purchase (wei).",
+						"_provider": "Owner of the service.",
+						"_serviceId": "keccak256 hash of the chosen service name."
+					}
+				},
+				"factoryRefundBuyer(uint256)": {
+					"details": "Refunds the buyer – callable only by the factory after successful arbitration."
+				},
+				"factoryReleaseToProvider(uint256)": {
+					"details": "Releases funds to the provider – callable only by the factory."
+				}
+			},
+			"stateVariables": {
+				"nextPurchaseId": {
+					"details": "Incremental identifier for purchases."
+				}
+			},
+			"title": "EscroDot – minimal escrow & staking framework for AI‑agent servicesEscroDot – AI‑Agent Escrow (v0.4 – CCIP‑Read + Buyer‑Signed Claim + Open Arbiter) • Off‑chain delivery (ERC‑3668): `checkDelivery()` triggers CCIP‑Read. Gateway returns the   AI result. The buyer inspects the output off‑chain and, if satisfied, signs a message that   lets the provider claim funds. • Buyer‑signed claim: `claimPayment()` is called by the provider, supplying the buyer's   signature. Contract verifies and releases payment. • Open Dispute Resolution: Any address can become an arbiter – it just needs to deposit a   stake ≥ purchase value when calling `resolveDispute()`. (For brevity we return the stake in   the same tx; extend with lock‑and‑slash logic in later versions.)",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"DisputeRaised(uint256)": {
+					"notice": "Buyer flagged the purchase for dispute."
+				},
+				"OffchainDelivery(uint256,bytes32)": {
+					"notice": "Off‑chain gateway supplied a deliverable hash for a purchase."
+				},
+				"PaymentClaimed(uint256)": {
+					"notice": "Provider claimed the locked payment (buyer signature verified)."
+				},
+				"ServicePurchased(uint256,address,uint256)": {
+					"notice": "Buyer successfully paid for the service."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"buyService()": {
+					"notice": "Purchase the service by locking `price` ETH in this contract."
+				},
+				"ccipCallback(bytes,bytes)": {
+					"notice": "CCIP‑Read callback that simply logs the deliverable hash off‑chain."
+				},
+				"checkDelivery(uint256,bytes)": {
+					"notice": "Trigger an ERC‑3668 OffchainLookup so that a gateway can return the deliverable."
+				},
+				"claimPayment(uint256,bytes32,bytes)": {
+					"notice": "Provider claims funds by presenting a buyer‑signed message."
+				},
+				"description()": {
+					"notice": "Human‑readable description or IPFS CID (mutable by provider)."
+				},
+				"factory()": {
+					"notice": "Address of the factory that deployed this contract."
+				},
+				"gateway()": {
+					"notice": "CCIP‑Read gateway URL (mutable by provider)."
+				},
+				"gatewaySigner()": {
+					"notice": "CCIP‑Read gateway signer address (mutable by provider)."
+				},
+				"price()": {
+					"notice": "Fixed price (in wei) per purchase."
+				},
+				"provider()": {
+					"notice": "Wallet address that owns the service and receives payments."
+				},
+				"serviceId()": {
+					"notice": "Deterministic service identifier = keccak256(serviceName)."
+				},
+				"updateDescription(string)": {
+					"notice": "Update the human‑readable description."
+				},
+				"updateGateway(string)": {
+					"notice": "Update the CCIP gateway URL."
+				},
+				"updateGatewaySigner(address)": {
+					"notice": "Update the CCIP gateway signer address."
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"EscroDot.sol": "ServiceEscrow"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"details": {
+				"constantOptimizer": false,
+				"cse": false,
+				"deduplicate": false,
+				"inliner": false,
+				"jumpdestRemover": false,
+				"orderLiterals": false,
+				"peephole": false,
+				"simpleCounterForLoopUncheckedIncrement": true,
+				"yul": false
+			},
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ECDSA.sol": {
+			"keccak256": "0xeed0a08b0b091f528356cbc7245891a4c748682d4f6a18055e8e6ca77d12a6cf",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ba80ba06c8e6be852847e4c5f4492cef801feb6558ae09ed705ff2e04ea8b13c",
+				"dweb:/ipfs/QmXRJDv3xHLVQCVXg1ZvR35QS9sij5y9NDWYzMfUfAdTHF"
+			]
+		},
+		"EscroDot.sol": {
+			"keccak256": "0x0da4595324bb2cfbe77aa9158c4a3583f5995d28b5a14a164faca98fa08db07f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3a058c9ce1f2048f06828ac2089712453a7ac9dd7a9546bfc31d87594ca86487",
+				"dweb:/ipfs/QmWT2psySkPwmPxYneg9AvEsqGar5tpmg1U2cJ9T1Hhzyy"
+			]
+		},
+		"SignatureVerifier.sol": {
+			"keccak256": "0xc1d30621557da515270569c4b5ee5abed3c1266b4ea44ad0ce6bd2f7eff30f29",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://30d2453fb9dc02e392a8243a577d39357d4f253661c6f02f845b9051bea4037a",
+				"dweb:/ipfs/QmXb4TDEWAXwTHi3awHes3XEWEXMwTwbHHY5rh3rephNuh"
+			]
+		}
+	},
+	"version": 1
+}

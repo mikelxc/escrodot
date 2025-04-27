@@ -1,0 +1,419 @@
+{
+	"compiler": {
+		"version": "0.8.28+commit.7893614a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "refunded",
+						"type": "bool"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "arbiter",
+						"type": "address"
+					}
+				],
+				"name": "DisputeResolved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "escrow",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "provider",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "stake",
+						"type": "uint256"
+					}
+				],
+				"name": "ServiceDeployed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTotal",
+						"type": "uint256"
+					}
+				],
+				"name": "StakeToppedUp",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTotal",
+						"type": "uint256"
+					}
+				],
+				"name": "StakeWithdrawn",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "gatewaySigner",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "createService",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "escrow",
+						"type": "address"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "listServices",
+				"outputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "ids",
+						"type": "bytes32[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "escrows",
+						"type": "address[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "refundBuyer",
+						"type": "bool"
+					}
+				],
+				"name": "resolveDispute",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "serviceIds",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "services",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "stakes",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					}
+				],
+				"name": "topUpStake",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdrawStake",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"createService(string,uint256,string,address,string)": {
+					"params": {
+						"description": "IPFS CID or text description. `msg.value` – initial stake (must be ≥ `price`).",
+						"gateway": "CCIP‑Read endpoint.",
+						"name": "Human‑readable service name (unique).",
+						"price": "Fixed price in wei."
+					}
+				},
+				"listServices()": {
+					"returns": {
+						"escrows": "    Parallel array of escrow contract addresses.",
+						"ids": "        Array of all service IDs."
+					}
+				},
+				"resolveDispute(bytes32,uint256,bool)": {
+					"params": {
+						"purchaseId": "Identifier within the ServiceEscrow contract.",
+						"refundBuyer": "If true, refund buyer; otherwise release to provider.",
+						"serviceId": "Service identifier."
+					}
+				}
+			},
+			"title": "EscroDotFactory",
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"DisputeResolved(bytes32,uint256,bool,address)": {
+					"notice": "Dispute resolved by an arbiter."
+				},
+				"ServiceDeployed(bytes32,string,address,address,uint256)": {
+					"notice": "New service deployed."
+				},
+				"StakeToppedUp(bytes32,uint256,uint256)": {
+					"notice": "Provider topped up their stake."
+				},
+				"StakeWithdrawn(bytes32,uint256,uint256)": {
+					"notice": "Provider withdrew part of their stake."
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"resolveDispute(bytes32,uint256,bool)": {
+					"notice": "Resolve a dispute. Anyone can act as arbiter by bonding ≥ price."
+				},
+				"serviceIds(uint256)": {
+					"notice": "List of all serviceIds (for off‑chain pagination)."
+				},
+				"services(bytes32)": {
+					"notice": "Map: serviceId ⇒ ServiceEscrow contract address."
+				},
+				"stakes(bytes32)": {
+					"notice": "Map: serviceId ⇒ provider's collateral (held by factory)."
+				},
+				"topUpStake(bytes32)": {
+					"notice": "Increase stake for a service. "
+				},
+				"withdrawStake(bytes32,uint256)": {
+					"notice": "Withdraw unused stake (cannot exceed balance held by factory)."
+				}
+			},
+			"notice": "Deploys ServiceEscrow contracts and manages provider stakes & arbitration.",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"EscroDot.sol": "EscroDotFactory"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"details": {
+				"constantOptimizer": false,
+				"cse": false,
+				"deduplicate": false,
+				"inliner": false,
+				"jumpdestRemover": false,
+				"orderLiterals": false,
+				"peephole": false,
+				"simpleCounterForLoopUncheckedIncrement": true,
+				"yul": false
+			},
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ECDSA.sol": {
+			"keccak256": "0xeed0a08b0b091f528356cbc7245891a4c748682d4f6a18055e8e6ca77d12a6cf",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ba80ba06c8e6be852847e4c5f4492cef801feb6558ae09ed705ff2e04ea8b13c",
+				"dweb:/ipfs/QmXRJDv3xHLVQCVXg1ZvR35QS9sij5y9NDWYzMfUfAdTHF"
+			]
+		},
+		"EscroDot.sol": {
+			"keccak256": "0x0da4595324bb2cfbe77aa9158c4a3583f5995d28b5a14a164faca98fa08db07f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3a058c9ce1f2048f06828ac2089712453a7ac9dd7a9546bfc31d87594ca86487",
+				"dweb:/ipfs/QmWT2psySkPwmPxYneg9AvEsqGar5tpmg1U2cJ9T1Hhzyy"
+			]
+		},
+		"SignatureVerifier.sol": {
+			"keccak256": "0xc1d30621557da515270569c4b5ee5abed3c1266b4ea44ad0ce6bd2f7eff30f29",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://30d2453fb9dc02e392a8243a577d39357d4f253661c6f02f845b9051bea4037a",
+				"dweb:/ipfs/QmXb4TDEWAXwTHi3awHes3XEWEXMwTwbHHY5rh3rephNuh"
+			]
+		}
+	},
+	"version": 1
+}
