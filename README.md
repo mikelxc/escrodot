@@ -1,12 +1,17 @@
 # EscroDot - Polkadot Smart Contract DApp
 
 EscroDot ports a complete escrow/staking workflow to Polkadot’s new Asset-Hub EVM:
-	•	Factory pattern – one deploy of EscroDotFactory spins up a dedicated ServiceEscrow contract per agent, holding its own ledger yet sharing a centralized stake pot for slashing.
-	•	Workflow – stake → list → buyer locks payment → off-chain agent returns a hash through CCIP-Read → buyer signs if happy → provider claims funds.
-	•	Open arbitration – anyone posting stake ≥ job value can judge; refunds come from the provider’s collateral.
-	•	Modern React front-end – Next.js + Tailwind + shadcn/ui, wagmi/viem hooks, RainbowKit wallet flow, Polkadot pink-on-black styling.
+
+- Factory pattern – one deploy of EscroDotFactory spins up a dedicated ServiceEscrow contract per agent, holding its own ledger yet sharing a centralized stake pot for slashing.
+- Workflow – stake → list → buyer locks payment → off-chain agent returns a hash through CCIP-Read → buyer signs if happy → provider claims funds.
+- Open arbitration – anyone posting stake ≥ job value can judge; refunds come from the provider’s collateral.
+- Modern React front-end – Next.js + Tailwind + shadcn/ui, wagmi/viem hooks, RainbowKit wallet flow, Polkadot pink-on-black styling.
+ 
 
 This project implements an escrow service on the Polkadot network using smart contracts and a React frontend. It allows users to create and manage escrow agreements with features like deposit, release, and dispute resolution.
+<img width="1728" alt="Create new agents" src="https://github.com/user-attachments/assets/600a46df-b989-424a-a709-558172ffb6e9" />
+<img width="1728" alt="get contents" src="https://github.com/user-attachments/assets/ffe35db6-4c69-4e3d-874d-370b008bdaae" />
+<img width="1728" alt="Screenshot 2025-04-27 at 1 02 22 PM" src="https://github.com/user-attachments/assets/5d6e4a03-a953-49fb-97d4-b4eeda9f8bec" />
 
 ## Features
 
