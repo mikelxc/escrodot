@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { useWriteContract, useAccount, useWaitForTransactionReceipt, usePublicClient } from 'wagmi'
-import { escroDotFactoryConfig } from "contracts"
+import { useWalletClient, useWriteContract, useAccount, useWaitForTransactionReceipt, usePublicClient } from 'wagmi'
+import { escrowAbi, escrowAddress } from "@/lib/contract"
 import { parseEther, isAddress } from 'viem'
 import { Loader2 } from "lucide-react"
 import Link from "next/link"
@@ -30,22 +30,18 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined)
+  const { address } = useAccount()
+  const publicClient = usePublicClient()
+  const { writeContract, isPending } = useWriteContract()
+  const { data: receipt, isLoading: isConfirming } = useWaitForTransactionReceipt({
+    hash: txHash,
+  })
+
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: "",
     gatewayUrl: "",
-    gatewaySigner: "",
-  })
-  const { address } = useAccount()
-  const { writeContract, isPending } = useWriteContract()
-  const publicClient = usePublicClient()
-
-  const { data: receipt } = useWaitForTransactionReceipt({
-    hash: txHash,
-    query: {
-      enabled: !!txHash,
-    }
   })
 
   const priceInWei = formData.price ? parseEther(formData.price) : parseEther("0")
@@ -59,7 +55,7 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
     e.preventDefault()
 
     // Basic validation
-    if (!formData.name || !formData.description || !formData.price || !formData.gatewayUrl || !formData.gatewaySigner) {
+    if (!formData.name || !formData.description || !formData.price || !formData.gatewayUrl) {
       toast({
         title: "Error",
         description: "Please fill in all fields",
@@ -77,19 +73,10 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
       return
     }
 
-    if (!isAddress(formData.gatewaySigner)) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid gateway signer address",
-        variant: "destructive",
-      })
-      return
-    }
-
     if (!publicClient) {
       toast({
         title: "Error",
-        description: "Failed to initialize client. Please try again.",
+        description: "Failed to initialize public client",
         variant: "destructive",
       })
       return
@@ -99,33 +86,51 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
 
     try {
       // First simulate the transaction
-      const simulation = await publicClient.simulateContract({
-        ...escroDotFactoryConfig,
+      const { request } = await publicClient.simulateContract({
+        address: escrowAddress,
+        abi: escrowAbi,
         functionName: 'createService',
         args: [
-          formData.name,
+          // formData.name,
           priceInWei,
           formData.gatewayUrl,
-          formData.gatewaySigner as `0x${string}`,
-          formData.description
-        ],
+          // formData.description
+        ] as const,
         value: priceInWei,
         account: address,
       })
 
-      if (!simulation?.request) {
-        toast({
-          title: "Error",
-          description: "Failed to simulate transaction. Please try again.",
-          variant: "destructive",
-        })
-        setIsLoading(false)
-        return
-      }
+      // Then write the contract
+      const hash = await writeContract({
+        address: escrowAddress,
+        abi: escrowAbi,
+        functionName: 'createService',
+        args: [
+          // formData.name,
+          priceInWei,
+          formData.gatewayUrl,
+          // formData.description
+        ] as const,
+        value: priceInWei,
+      }) as unknown as `0x${string}`
 
-      // If simulation succeeds, send the actual transaction
-      await writeContract(simulation.request)
-      // The transaction hash will be available in the receipt when the transaction is mined
+      setTxHash(hash)
+      toast({
+        title: "Transaction submitted",
+        description: (
+          <div className="flex flex-col gap-2">
+            <p>Your service "{formData.name}" is being created.</p>
+            <Link 
+              href={`https://westend.subscan.io/extrinsic/${hash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-pink-500 hover:underline"
+            >
+              View transaction on Subscan
+            </Link>
+          </div>
+        ),
+      })
     } catch (error) {
       console.error('Error creating service:', error)
       toast({
@@ -140,24 +145,11 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
   // Handle transaction status changes
   React.useEffect(() => {
     if (receipt) {
-      setTxHash(receipt.transactionHash)
       setIsLoading(false)
       onOpenChange(false)
       toast({
         title: "Service created!",
-        description: (
-          <div className="flex flex-col gap-2">
-            <p>Your service "{formData.name}" has been created successfully.</p>
-            <Link 
-              href={`https://westend.subscan.io/extrinsic/${receipt.transactionHash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-pink-500 hover:underline"
-            >
-              View transaction on Subscan
-            </Link>
-          </div>
-        ),
+        description: `Your service "${formData.name}" has been created successfully.`,
       })
     }
   }, [receipt, formData.name, onOpenChange, toast])
@@ -225,7 +217,7 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
             />
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="gatewaySigner">Gateway Signer</Label>
             <Input
               id="gatewaySigner"
@@ -235,7 +227,7 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
               onChange={handleChange}
               className="bg-black border-gray-800 focus-visible:ring-pink-500"
             />
-          </div>
+          </div> */}
 
           <div className="rounded-md bg-pink-500/10 p-4 border border-pink-500/20">
             <h4 className="font-medium mb-2">Stake Requirement</h4>
@@ -256,12 +248,12 @@ export function CreateServiceModal({ open, onOpenChange }: CreateServiceModalPro
             type="submit" 
             onClick={handleSubmit} 
             className="bg-pink-500 hover:bg-pink-600" 
-            disabled={isLoading}
+            disabled={isLoading || isPending || isConfirming}
           >
-            {isLoading ? (
+            {isLoading || isPending || isConfirming ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Creating...
+                {isConfirming ? "Confirming..." : "Creating..."}
               </>
             ) : (
               "Create Service"

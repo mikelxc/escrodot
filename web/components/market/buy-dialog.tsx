@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { useAccount } from "wagmi"
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
 import { ConnectButton } from "@/components/connect-button"
 import { useToast } from "@/hooks/use-toast"
+import { parseEther } from "viem"
+import { Loader2 } from "lucide-react"
+import { escrowAbi, escrowAddress } from "@/lib/contract"
 
 interface BuyDialogProps {
   agent: {
@@ -31,37 +34,52 @@ interface BuyDialogProps {
 export function BuyDialog({ agent, open, onOpenChange }: BuyDialogProps) {
   const { isConnected } = useAccount()
   const [isLoading, setIsLoading] = useState(false)
+  const [txHash, setTxHash] = useState<`0x${string}` | undefined>(undefined)
   const { toast } = useToast()
+  const { writeContract, isPending } = useWriteContract()
+  const { data: receipt, isLoading: isConfirming } = useWaitForTransactionReceipt({
+    hash: txHash,
+  })
 
   const handleBuy = async () => {
     setIsLoading(true)
 
-    // Simulate transaction
-    setTimeout(() => {
+    try {
+      const hash = await writeContract({
+        address: escrowAddress,
+        abi: escrowAbi,
+        functionName: 'buyService',
+        args: [BigInt(agent.id)],
+        value: parseEther(agent.price)
+      }) as unknown as `0x${string}`
+
+      setTxHash(hash)
+      toast({
+        title: "Transaction submitted",
+        description: "Your purchase is being processed. Please wait for confirmation.",
+      })
+    } catch (error) {
+      console.error('Error purchasing service:', error)
+      toast({
+        title: "Error",
+        description: "Failed to purchase service. Please try again.",
+        variant: "destructive",
+      })
+      setIsLoading(false)
+    }
+  }
+
+  // Handle transaction status changes
+  React.useEffect(() => {
+    if (receipt) {
       setIsLoading(false)
       onOpenChange(false)
-
       toast({
         title: "Purchase successful!",
         description: `You've hired ${agent.name}. Check your dashboard for updates.`,
       })
-    }, 2000)
-
-    // In a real implementation, you would use wagmi hooks:
-    // const { writeContract } = useWriteContract()
-    // try {
-    //   const hash = await writeContract({
-    //     address: CONTRACT_ADDRESS,
-    //     abi: CONTRACT_ABI,
-    //     functionName: 'buyService',
-    //     args: [agent.id],
-    //     value: parseEther(agent.price)
-    //   })
-    //   // Handle success
-    // } catch (error) {
-    //   // Handle error
-    // }
-  }
+    }
+  }, [receipt, agent.name, onOpenChange, toast])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -93,8 +111,19 @@ export function BuyDialog({ agent, open, onOpenChange }: BuyDialogProps) {
 
         <DialogFooter>
           {isConnected ? (
-            <Button onClick={handleBuy} className="w-full bg-pink-500 hover:bg-pink-600" disabled={isLoading}>
-              {isLoading ? "Processing..." : `Pay ${agent.price} WND`}
+            <Button 
+              onClick={handleBuy} 
+              className="w-full bg-pink-500 hover:bg-pink-600" 
+              disabled={isLoading || isPending || isConfirming}
+            >
+              {isLoading || isPending || isConfirming ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {isConfirming ? "Confirming..." : "Processing..."}
+                </>
+              ) : (
+                `Pay ${agent.price} WND`
+              )}
             </Button>
           ) : (
             <div className="w-full flex justify-center">
