@@ -1,52 +1,90 @@
-# react-solidity template
+# EscroDot - Polkadot Smart Contract DApp
 
-This template sets up a combination of Solidity smart contracts and a React front-end app that interacts with these
-smart contracts.  
-This template includes
+EscroDot ports a complete escrow/staking workflow to Polkadot’s new Asset-Hub EVM:
+	•	Factory pattern – one deploy of EscroDotFactory spins up a dedicated ServiceEscrow contract per agent, holding its own ledger yet sharing a centralized stake pot for slashing.
+	•	Workflow – stake → list → buyer locks payment → off-chain agent returns a hash through CCIP-Read → buyer signs if happy → provider claims funds.
+	•	Open arbitration – anyone posting stake ≥ job value can judge; refunds come from the provider’s collateral.
+	•	Modern React front-end – Next.js + Tailwind + shadcn/ui, wagmi/viem hooks, RainbowKit wallet flow, Polkadot pink-on-black styling.
+
+This project implements an escrow service on the Polkadot network using smart contracts and a React frontend. It allows users to create and manage escrow agreements with features like deposit, release, and dispute resolution.
+
+## Features
+
+- Smart contract-based escrow system
+- React frontend with Tailwind CSS
+- Integration with MetaMask wallet
+- Real-time balance and value tracking
+- Transaction management interface
+
+## Tech Stack
 
 * [ethers](https://docs.ethers.org/v6/) for smart contract interaction
-* [Tailwind CSS](https://tailwindcss.com) + [Tailwind UI](https://tailwindui.com/).
-* [Vite](https://vite.dev/) for dev tooling.
+* [Tailwind CSS](https://tailwindcss.com) for styling
+* [Vite](https://vite.dev/) for development tooling
+* [Polkadot](https://polkadot.network/) for blockchain infrastructure
 
-## Writing smart contracts
+## Smart Contracts
 
-Currently, two ways of developing smart contracts are supported. Both are deploying to Westend Asset Hub.
+The project includes two main smart contracts:
+- `EscroDot.sol`: The main escrow contract with full functionality
+- `EscroDotLite.sol`: A simplified version of the escrow contract
 
-### Remix
+### Contract Features
+- Create escrow agreements
+- Deposit funds
+- Release funds to beneficiaries
+- Dispute resolution mechanism
+- Signature verification for secure transactions
 
-1. Run `pnpm remixd` to start remixd environment.
-2. Go to https://remix.polkadot.io and activate REMIXD plugin.
-3. Start hacking! Changes performed in Remix will be synced to local file system.
-4. After deploying and pinning a smart contract, it'll be saved on your file system, run `pnpm contracts:export` to
-   export contract data.
+## Development Setup
 
-### Local development
+### Smart Contract Development
 
-1. Edit smart contracts in root directory
+#### Using Remix IDE
+1. Run `pnpm remixd` to start the Remix development environment
+2. Go to https://remix.polkadot.io and activate the REMIXD plugin
+3. Start developing your smart contracts
+4. After deploying and pinning a smart contract, run `pnpm contracts:export` to export contract data
+
+#### Local Development
+1. Edit smart contracts in the `contracts` directory
 2. Run `pnpm contracts:build` to compile smart contracts
-3. Run `pnpm contracts:deploy` to deploy them  
-   Required environment variables:
-  * `ACCOUNT_SEED`: seed phrase for the account that will sign the deployment.
-  * `RPC_URL`: for Westend Asset Hub, probably `https://westend-asset-hub-eth-rpc.polkadot.io`, for kitchensink, probably `http://localhost:8545`
-4. Run `pnpm contracts:export` to export contract data.
+3. Run `pnpm contracts:deploy` to deploy them
 
-## Interacting with smart contracts from frontend app
+Required environment variables:
+- `ACCOUNT_SEED`: Seed phrase for the account that will sign the deployment
+- `RPC_URL`: RPC endpoint URL (e.g., `https://westend-asset-hub-eth-rpc.polkadot.io` for Westend Asset Hub)
 
-1. Run `pnpm frontend:dev` to start `vite` environment
-2. You can import all exported contracts using `import { contracts } from "contracts"`
-3. You can call your contracts like this:
+### Frontend Development
 
+1. Run `pnpm frontend:dev` to start the development server
+2. The frontend will automatically connect to your deployed smart contracts
+3. Use MetaMask to interact with the contracts
+
+## Interacting with Smart Contracts
+
+The frontend provides a user-friendly interface to:
+- View current contract state
+- Check stored values
+- Monitor contract balance
+- Execute transactions
+- Manage escrow agreements
+
+Example contract interaction:
 ```ts
-import { Contract, formatEther } from "ethers";
+import { Contract } from "ethers";
 import { contracts, ContractData } from "contracts"
 
-const contractData: ContractData = contracts["1b5b93a223026219f4f75e5b90c20970ab976451"];
+const contractData: ContractData = contracts["your-contract-address"];
 const contract = new Contract(contractData.address, contractData.abi, signer);
 
-const transactionResponse = await contract.retrieve(); // method on your smart contract
+// Interact with contract methods
+const transactionResponse = await contract.yourMethod();
 ```
 
-More info at:
-* [contracts.polkadot.io](https://contracts.polkadot.io/): docs on smart contracts
-* [ethers docs](https://docs.ethers.org/v6/)  
+## Additional Resources
+
+* [Polkadot Smart Contracts Documentation](https://contracts.polkadot.io/)
+* [Ethers.js Documentation](https://docs.ethers.org/v6/)
+* [Polkadot Network](https://polkadot.network/)
 
