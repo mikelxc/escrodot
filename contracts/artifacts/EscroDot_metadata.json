@@ -27,9 +27,9 @@
 					},
 					{
 						"indexed": true,
-						"internalType": "address",
-						"name": "buyer",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
 					},
 					{
 						"indexed": false,
@@ -52,9 +52,9 @@
 					},
 					{
 						"indexed": true,
-						"internalType": "address",
-						"name": "buyer",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
 					}
 				],
 				"name": "DisputeRaised",
@@ -71,9 +71,9 @@
 					},
 					{
 						"indexed": true,
-						"internalType": "address",
-						"name": "buyer",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
 					},
 					{
 						"indexed": false,
@@ -133,6 +133,12 @@
 					},
 					{
 						"indexed": true,
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
 						"internalType": "address",
 						"name": "buyer",
 						"type": "address"
@@ -169,7 +175,13 @@
 					}
 				],
 				"name": "buyService",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					}
+				],
 				"stateMutability": "payable",
 				"type": "function"
 			},
@@ -205,9 +217,9 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "address",
-						"name": "buyer",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
 					},
 					{
 						"internalType": "bytes32",
@@ -218,6 +230,25 @@
 				"name": "deliver",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "nextPurchaseId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -241,9 +272,9 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "address",
+						"internalType": "uint256",
 						"name": "",
-						"type": "address"
+						"type": "uint256"
 					}
 				],
 				"name": "purchases",
@@ -283,6 +314,11 @@
 						"internalType": "uint256",
 						"name": "serviceId",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
 					}
 				],
 				"name": "raiseDispute",
@@ -298,9 +334,9 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "address",
-						"name": "buyer",
-						"type": "address"
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
 					},
 					{
 						"internalType": "bool",
@@ -389,7 +425,10 @@
 			"kind": "dev",
 			"methods": {
 				"buyService(uint256)": {
-					"details": "Buyer locks payment for a service."
+					"details": "Buyer locks payment for a service. Allows multiple purchases.",
+					"returns": {
+						"purchaseId": "A unique purchase identifier for further actions."
+					}
 				},
 				"createService(uint256,string)": {
 					"details": "Provider stakes ETH and creates a service listing.",
@@ -398,23 +437,23 @@
 						"price": "Fixed price per purchase (in wei)."
 					}
 				},
-				"deliver(uint256,address,bytes32)": {
-					"details": "Provider marks deliverable for a given buyer & receives payment immediately.",
+				"deliver(uint256,uint256,bytes32)": {
+					"details": "Provider marks deliverable for a given purchase and receives payment immediately.",
 					"params": {
 						"deliverableHash": "could be IPFS CID / SHA‑256 of encrypted artifact."
 					}
 				},
-				"raiseDispute(uint256)": {
+				"raiseDispute(uint256,uint256)": {
 					"details": "Buyer escalates after delivery if unhappy with the output."
 				},
-				"resolveDispute(uint256,address,bool)": {
+				"resolveDispute(uint256,uint256,bool)": {
 					"details": "Arbiter decides outcome. If `refund=true` the buyer receives payment back      using a slash from provider stake. Otherwise dispute is closed."
 				},
 				"topUpStake(uint256)": {
 					"details": "Provider can add more stake at any time."
 				},
 				"withdrawStake(uint256,uint256)": {
-					"details": "Provider may withdraw excess stake when no unresolved disputes exist."
+					"details": "Provider may withdraw excess stake when no disputes are unresolved."
 				}
 			},
 			"title": "EscroDot – minimal escrow & staking framework for AI‑agent services",
@@ -453,11 +492,11 @@
 	},
 	"sources": {
 		"EscroDot.sol": {
-			"keccak256": "0x70c0ffd3d6f9ef374cb77e6c8a1a271aed9f696f38a18577b428bf5c41f0cab2",
+			"keccak256": "0x787d5b27054f6fd1203954a78c5cb674de038d1f5bef5b12d98c7aa4386cb522",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3ee39bfb5f2ec33f896ba3423fe518a1745abd09e6ebd30524370530da6df960",
-				"dweb:/ipfs/QmVL5Y816mA4i96TRwTRWHizADoUYuHVpmvpNKHc3Te7DV"
+				"bzz-raw://56c10bfe8f9c227aaae85b8f217d2047a3c7499ab844e32ff3734e1449884296",
+				"dweb:/ipfs/QmTsuUv2v4framTUg3jmxvHGH8Ycv1otPmB9evqGWBuakD"
 			]
 		}
 	},

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.25;
+pragma solidity ^0.8.28;
 
 /**
  * @title EscroDot – minimal escrow & staking framework for AI‑agent services
@@ -24,14 +24,14 @@ contract EscroDot {
     struct Service {
         address owner;   // provider / staking address
         uint256 price;   // price per purchase (wei)
-        string  gateway; // off‑chain endpoint (could be IPFS / HTTPS)
+        string  gateway; // off‑chain endpoint (IPFS CID / HTTPS URL)
         uint256 stake;   // remaining stake (wei)
         bool    active;  // provider can deactivate later
     }
 
     struct Purchase {
         address buyer;
-        uint256 amount;     // should equal service.price (kept for clarity)
+        uint256 amount;     // equals service.price
         bool    delivered;  // provider marked deliverable
         bool    disputed;   // buyer raised dispute
         bool    resolved;   // arbiter resolved
@@ -41,17 +41,19 @@ contract EscroDot {
     /*                                State vars                                  */
     /* -------------------------------------------------------------------------- */
 
-    address public immutable arbiter;            // trusted dispute resolver
-    uint256 public nextServiceId = 1;            // incremental id
+    address public immutable arbiter;              // trusted dispute resolver
 
-    mapping(uint256 => Service) public services; // serviceId => Service
-    mapping(uint256 => mapping(address => Purchase)) public purchases; // serviceId => buyer => Purchase
+    uint256 public nextServiceId = 1;              // incremental service id
+    mapping(uint256 => uint256) public nextPurchaseId;                  // serviceId => next purchaseId
+
+    mapping(uint256 => Service) public services;                        // serviceId => Service
+    mapping(uint256 => mapping(uint256 => Purchase)) public purchases;  // serviceId => purchaseId => Purchase
 
     /* -------------------------------------------------------------------------- */
     /*                                    Misc                                    */
     /* -------------------------------------------------------------------------- */
 
-    uint256 private _unlocked = 1;               // gas‑cheap re‑entrancy guard
+    uint256 private _unlocked = 1;                 // gas‑cheap re‑entrancy guard
     modifier lock() {
         require(_unlocked == 1, "LOCKED");
         _unlocked = 0;
@@ -59,15 +61,20 @@ contract EscroDot {
         _unlocked = 1;
     }
 
+    function _safeSend(address to, uint256 amount) internal {
+        (bool ok, ) = to.call{value: amount}("");
+        require(ok, "ETH_SEND_FAIL");
+    }
+
     /* -------------------------------------------------------------------------- */
     /*                                   Events                                   */
     /* -------------------------------------------------------------------------- */
 
     event ServiceCreated(uint256 indexed id, address indexed owner, uint256 price, uint256 stake, string gateway);
-    event ServicePurchased(uint256 indexed id, address indexed buyer, uint256 amount);
-    event DeliverableProvided(uint256 indexed id, address indexed buyer, bytes32 deliverableHash);
-    event DisputeRaised(uint256 indexed id, address indexed buyer);
-    event DisputeResolved(uint256 indexed id, address indexed buyer, bool refunded);
+    event ServicePurchased(uint256 indexed id, uint256 indexed purchaseId, address indexed buyer, uint256 amount);
+    event DeliverableProvided(uint256 indexed id, uint256 indexed purchaseId, bytes32 deliverableHash);
+    event DisputeRaised(uint256 indexed id, uint256 indexed purchaseId);
+    event DisputeResolved(uint256 indexed id, uint256 indexed purchaseId, bool refunded);
 
     /* -------------------------------------------------------------------------- */
     /*                                 Constructor                                */
@@ -90,7 +97,7 @@ contract EscroDot {
     function createService(uint256 price, string calldata gateway) external payable returns (uint256 serviceId) {
         require(price > 0, "price = 0");
         require(bytes(gateway).length > 0, "gateway empty");
-        require(msg.value >= price, "stake < price"); // ensure stake can cover at least one refund
+        require(msg.value >= price, "stake < price");
 
         serviceId = nextServiceId++;
         services[serviceId] = Service({
@@ -105,15 +112,16 @@ contract EscroDot {
     }
 
     /**
-     * @dev Buyer locks payment for a service.
+     * @dev Buyer locks payment for a service. Allows multiple purchases.
+     * @return purchaseId A unique purchase identifier for further actions.
      */
-    function buyService(uint256 serviceId) external payable lock {
+    function buyService(uint256 serviceId) external payable lock returns (uint256 purchaseId) {
         Service storage s = services[serviceId];
         require(s.active, "inactive");
         require(msg.value == s.price, "wrong amount");
-        require(purchases[serviceId][msg.sender].amount == 0, "already bought");
 
-        purchases[serviceId][msg.sender] = Purchase({
+        purchaseId = nextPurchaseId[serviceId]++;
+        purchases[serviceId][purchaseId] = Purchase({
             buyer: msg.sender,
             amount: msg.value,
             delivered: false,
@@ -121,49 +129,49 @@ contract EscroDot {
             resolved: false
         });
 
-        emit ServicePurchased(serviceId, msg.sender, msg.value);
+        emit ServicePurchased(serviceId, purchaseId, msg.sender, msg.value);
     }
 
     /**
-     * @dev Provider marks deliverable for a given buyer & receives payment immediately.
+     * @dev Provider marks deliverable for a given purchase and receives payment immediately.
      * @param deliverableHash could be IPFS CID / SHA‑256 of encrypted artifact.
      */
-    function deliver(uint256 serviceId, address buyer, bytes32 deliverableHash) external lock {
+    function deliver(uint256 serviceId, uint256 purchaseId, bytes32 deliverableHash) external lock {
         Service storage s = services[serviceId];
         require(msg.sender == s.owner, "not owner");
 
-        Purchase storage p = purchases[serviceId][buyer];
+        Purchase storage p = purchases[serviceId][purchaseId];
         require(p.amount > 0 && !p.delivered, "invalid purchase");
 
         p.delivered = true;
 
-        emit DeliverableProvided(serviceId, buyer, deliverableHash);
+        emit DeliverableProvided(serviceId, purchaseId, deliverableHash);
 
-        // release buyer payment to provider
-        payable(s.owner).transfer(p.amount);
+        _safeSend(s.owner, p.amount);
     }
 
     /**
      * @dev Buyer escalates after delivery if unhappy with the output.
      */
-    function raiseDispute(uint256 serviceId) external {
-        Purchase storage p = purchases[serviceId][msg.sender];
+    function raiseDispute(uint256 serviceId, uint256 purchaseId) external {
+        Purchase storage p = purchases[serviceId][purchaseId];
+        require(msg.sender == p.buyer, "not buyer");
         require(p.delivered, "not delivered yet");
         require(!p.disputed, "already disputed");
 
         p.disputed = true;
 
-        emit DisputeRaised(serviceId, msg.sender);
+        emit DisputeRaised(serviceId, purchaseId);
     }
 
     /**
      * @dev Arbiter decides outcome. If `refund=true` the buyer receives payment back
      *      using a slash from provider stake. Otherwise dispute is closed.
      */
-    function resolveDispute(uint256 serviceId, address buyer, bool refund) external lock {
+    function resolveDispute(uint256 serviceId, uint256 purchaseId, bool refund) external lock {
         require(msg.sender == arbiter, "not arbiter");
 
-        Purchase storage p = purchases[serviceId][buyer];
+        Purchase storage p = purchases[serviceId][purchaseId];
         require(p.disputed && !p.resolved, "no active dispute");
 
         p.resolved = true;
@@ -173,10 +181,10 @@ contract EscroDot {
             uint256 refundAmount = p.amount;
             require(s.stake >= refundAmount, "insufficient stake");
             s.stake -= refundAmount;
-            payable(buyer).transfer(refundAmount);
+            _safeSend(p.buyer, refundAmount);
         }
 
-        emit DisputeResolved(serviceId, buyer, refund);
+        emit DisputeResolved(serviceId, purchaseId, refund);
     }
 
     /* -------------------------------------------------------------------------- */
@@ -191,12 +199,12 @@ contract EscroDot {
         s.stake += msg.value;
     }
 
-    /// @dev Provider may withdraw excess stake when no unresolved disputes exist.
+    /// @dev Provider may withdraw excess stake when no disputes are unresolved.
     function withdrawStake(uint256 serviceId, uint256 amount) external lock {
         Service storage s = services[serviceId];
         require(msg.sender == s.owner, "not owner");
         require(amount <= s.stake, "overdraw");
         s.stake -= amount;
-        payable(s.owner).transfer(amount);
+        _safeSend(s.owner, amount);
     }
 }
