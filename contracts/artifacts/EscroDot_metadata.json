@@ -1,0 +1,465 @@
+{
+	"compiler": {
+		"version": "0.8.28+commit.7893614a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_arbiter",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "deliverableHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "DeliverableProvided",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					}
+				],
+				"name": "DisputeRaised",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "bool",
+						"name": "refunded",
+						"type": "bool"
+					}
+				],
+				"name": "DisputeResolved",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "stake",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
+					}
+				],
+				"name": "ServiceCreated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "ServicePurchased",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "arbiter",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "serviceId",
+						"type": "uint256"
+					}
+				],
+				"name": "buyService",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
+					}
+				],
+				"name": "createService",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "serviceId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "serviceId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "deliverableHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "deliver",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nextServiceId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "purchases",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "delivered",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "disputed",
+						"type": "bool"
+					},
+					{
+						"internalType": "bool",
+						"name": "resolved",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "serviceId",
+						"type": "uint256"
+					}
+				],
+				"name": "raiseDispute",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "serviceId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "buyer",
+						"type": "address"
+					},
+					{
+						"internalType": "bool",
+						"name": "refund",
+						"type": "bool"
+					}
+				],
+				"name": "resolveDispute",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "services",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "owner",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "price",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "stake",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "active",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "serviceId",
+						"type": "uint256"
+					}
+				],
+				"name": "topUpStake",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "serviceId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdrawStake",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"author": "Mike Liu (mikelxc) Mechanics (v0): 1. Service provider stakes ETH to create a listing with a fixed price & gateway URL. 2. Buyer locks the payment by calling buyService(). 3. Provider delivers off‑chain via the gateway and calls deliver() with a hash proof – ETH is released to them immediately. 4. Buyer may raiseDispute() within any agreed timeframe. 5. Arbiter resolves the dispute; on refund the buyer is compensated from the provider’s stake (slash) rather than claw‑back. Notes: • All values are in native ETH. No ERC‑20 support yet. • In production you’d add time‑outs, ERC‑20 support, upgradeability, and signature‑based off‑chain attestations.",
+			"kind": "dev",
+			"methods": {
+				"buyService(uint256)": {
+					"details": "Buyer locks payment for a service."
+				},
+				"createService(uint256,string)": {
+					"details": "Provider stakes ETH and creates a service listing.",
+					"params": {
+						"gateway": "URL / CID where the AI agent can be invoked.",
+						"price": "Fixed price per purchase (in wei)."
+					}
+				},
+				"deliver(uint256,address,bytes32)": {
+					"details": "Provider marks deliverable for a given buyer & receives payment immediately.",
+					"params": {
+						"deliverableHash": "could be IPFS CID / SHA‑256 of encrypted artifact."
+					}
+				},
+				"raiseDispute(uint256)": {
+					"details": "Buyer escalates after delivery if unhappy with the output."
+				},
+				"resolveDispute(uint256,address,bool)": {
+					"details": "Arbiter decides outcome. If `refund=true` the buyer receives payment back      using a slash from provider stake. Otherwise dispute is closed."
+				},
+				"topUpStake(uint256)": {
+					"details": "Provider can add more stake at any time."
+				},
+				"withdrawStake(uint256,uint256)": {
+					"details": "Provider may withdraw excess stake when no unresolved disputes exist."
+				}
+			},
+			"title": "EscroDot – minimal escrow & staking framework for AI‑agent services",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"EscroDot.sol": "EscroDot"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"details": {
+				"constantOptimizer": false,
+				"cse": false,
+				"deduplicate": false,
+				"inliner": false,
+				"jumpdestRemover": false,
+				"orderLiterals": false,
+				"peephole": false,
+				"simpleCounterForLoopUncheckedIncrement": true,
+				"yul": false
+			},
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"EscroDot.sol": {
+			"keccak256": "0x70c0ffd3d6f9ef374cb77e6c8a1a271aed9f696f38a18577b428bf5c41f0cab2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://3ee39bfb5f2ec33f896ba3423fe518a1745abd09e6ebd30524370530da6df960",
+				"dweb:/ipfs/QmVL5Y816mA4i96TRwTRWHizADoUYuHVpmvpNKHc3Te7DV"
+			]
+		}
+	},
+	"version": 1
+}
