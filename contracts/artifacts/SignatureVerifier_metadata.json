@@ -1,0 +1,55 @@
+{
+	"compiler": {
+		"version": "0.8.28+commit.7893614a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"EscroDot.sol": "SignatureVerifier"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"details": {
+				"constantOptimizer": false,
+				"cse": false,
+				"deduplicate": false,
+				"inliner": false,
+				"jumpdestRemover": false,
+				"orderLiterals": false,
+				"peephole": false,
+				"simpleCounterForLoopUncheckedIncrement": true,
+				"yul": false
+			},
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"EscroDot.sol": {
+			"keccak256": "0x34dc16fc07e75b397ad3fe09f25fcf59eaf61c7889e875e2c15b6c4fedb46808",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f2b5d7a4fe020d63f1b473a4eb8a0290577f277d6f3c1e5c59fd72d60b2beaee",
+				"dweb:/ipfs/QmWSSTgTMUEjBq1jpMVPEsR1fbdN31kvJrKm6zoNgttVTu"
+			]
+		}
+	},
+	"version": 1
+}

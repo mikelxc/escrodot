@@ -6,49 +6,40 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_arbiter",
-						"type": "address"
-					}
-				],
-				"stateMutability": "nonpayable",
-				"type": "constructor"
+				"inputs": [],
+				"name": "ECDSAInvalidSignature",
+				"type": "error"
 			},
 			{
-				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": true,
 						"internalType": "uint256",
-						"name": "id",
+						"name": "length",
 						"type": "uint256"
-					},
+					}
+				],
+				"name": "ECDSAInvalidSignatureLength",
+				"type": "error"
+			},
+			{
+				"inputs": [
 					{
-						"indexed": true,
-						"internalType": "uint256",
-						"name": "purchaseId",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
 						"internalType": "bytes32",
-						"name": "deliverableHash",
+						"name": "s",
 						"type": "bytes32"
 					}
 				],
-				"name": "DeliverableProvided",
-				"type": "event"
+				"name": "ECDSAInvalidSignatureS",
+				"type": "error"
 			},
 			{
 				"anonymous": false,
 				"inputs": [
 					{
 						"indexed": true,
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
 					},
 					{
 						"indexed": true,
@@ -65,9 +56,9 @@
 				"inputs": [
 					{
 						"indexed": true,
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
 					},
 					{
 						"indexed": true,
@@ -80,6 +71,12 @@
 						"internalType": "bool",
 						"name": "refunded",
 						"type": "bool"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "arbiter",
+						"type": "address"
 					}
 				],
 				"name": "DisputeResolved",
@@ -90,36 +87,18 @@
 				"inputs": [
 					{
 						"indexed": true,
-						"internalType": "uint256",
-						"name": "id",
-						"type": "uint256"
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
 					},
 					{
 						"indexed": true,
-						"internalType": "address",
-						"name": "owner",
-						"type": "address"
-					},
-					{
-						"indexed": false,
 						"internalType": "uint256",
-						"name": "price",
+						"name": "purchaseId",
 						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "uint256",
-						"name": "stake",
-						"type": "uint256"
-					},
-					{
-						"indexed": false,
-						"internalType": "string",
-						"name": "gateway",
-						"type": "string"
 					}
 				],
-				"name": "ServiceCreated",
+				"name": "PaymentClaimed",
 				"type": "event"
 			},
 			{
@@ -127,9 +106,40 @@
 				"inputs": [
 					{
 						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "provider",
+						"type": "address"
+					},
+					{
+						"indexed": false,
 						"internalType": "uint256",
-						"name": "id",
+						"name": "stake",
 						"type": "uint256"
+					}
+				],
+				"name": "ServiceDeployed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
 					},
 					{
 						"indexed": true,
@@ -154,24 +164,86 @@
 				"type": "event"
 			},
 			{
-				"inputs": [],
-				"name": "arbiter",
-				"outputs": [
+				"anonymous": false,
+				"inputs": [
 					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
 					}
 				],
-				"stateMutability": "view",
-				"type": "function"
+				"name": "ServiceUpdated",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTotal",
+						"type": "uint256"
+					}
+				],
+				"name": "StakeToppedUp",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "newTotal",
+						"type": "uint256"
+					}
+				],
+				"name": "StakeWithdrawn",
+				"type": "event"
 			},
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "bytes32",
 						"name": "serviceId",
-						"type": "uint256"
+						"type": "bytes32"
 					}
 				],
 				"name": "buyService",
@@ -188,33 +260,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "price",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "gateway",
-						"type": "string"
-					}
-				],
-				"name": "createService",
-				"outputs": [
-					{
-						"internalType": "uint256",
+						"internalType": "bytes32",
 						"name": "serviceId",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "serviceId",
-						"type": "uint256"
+						"type": "bytes32"
 					},
 					{
 						"internalType": "uint256",
@@ -227,7 +275,41 @@
 						"type": "bytes32"
 					}
 				],
-				"name": "deliver",
+				"name": "claimDigest",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "uint256",
+						"name": "purchaseId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "deliverableHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "buyerSignature",
+						"type": "bytes"
+					}
+				],
+				"name": "claimPayment",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -235,25 +317,59 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "nextPurchaseId",
-				"outputs": [
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
 					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "price",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					}
+				],
+				"name": "createService",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "listServices",
+				"outputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "ids",
+						"type": "bytes32[]"
 					}
 				],
 				"stateMutability": "view",
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "nextServiceId",
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "nextPurchaseIds",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -267,9 +383,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "bytes32",
 						"name": "",
-						"type": "uint256"
+						"type": "bytes32"
 					},
 					{
 						"internalType": "uint256",
@@ -291,7 +407,7 @@
 					},
 					{
 						"internalType": "bool",
-						"name": "delivered",
+						"name": "claimed",
 						"type": "bool"
 					},
 					{
@@ -311,9 +427,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "bytes32",
 						"name": "serviceId",
-						"type": "uint256"
+						"type": "bytes32"
 					},
 					{
 						"internalType": "uint256",
@@ -329,9 +445,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "bytes32",
 						"name": "serviceId",
-						"type": "uint256"
+						"type": "bytes32"
 					},
 					{
 						"internalType": "uint256",
@@ -340,13 +456,13 @@
 					},
 					{
 						"internalType": "bool",
-						"name": "refund",
+						"name": "refundBuyer",
 						"type": "bool"
 					}
 				],
 				"name": "resolveDispute",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -357,11 +473,30 @@
 						"type": "uint256"
 					}
 				],
+				"name": "serviceIds",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
 				"name": "services",
 				"outputs": [
 					{
 						"internalType": "address",
-						"name": "owner",
+						"name": "provider",
 						"type": "address"
 					},
 					{
@@ -371,18 +506,13 @@
 					},
 					{
 						"internalType": "string",
-						"name": "gateway",
+						"name": "description",
 						"type": "string"
 					},
 					{
-						"internalType": "uint256",
-						"name": "stake",
-						"type": "uint256"
-					},
-					{
-						"internalType": "bool",
-						"name": "active",
-						"type": "bool"
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
 					}
 				],
 				"stateMutability": "view",
@@ -391,9 +521,28 @@
 			{
 				"inputs": [
 					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "stakes",
+				"outputs": [
+					{
 						"internalType": "uint256",
-						"name": "serviceId",
+						"name": "",
 						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
 					}
 				],
 				"name": "topUpStake",
@@ -404,9 +553,32 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "bytes32",
 						"name": "serviceId",
-						"type": "uint256"
+						"type": "bytes32"
+					},
+					{
+						"internalType": "string",
+						"name": "description",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "gateway",
+						"type": "string"
+					}
+				],
+				"name": "updateService",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "serviceId",
+						"type": "bytes32"
 					},
 					{
 						"internalType": "uint256",
@@ -418,56 +590,123 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
-			"author": "Mike Liu (mikelxc) Mechanics (v0): 1. Service provider stakes ETH to create a listing with a fixed price & gateway URL. 2. Buyer locks the payment by calling buyService(). 3. Provider delivers off‑chain via the gateway and calls deliver() with a hash proof – ETH is released to them immediately. 4. Buyer may raiseDispute() within any agreed timeframe. 5. Arbiter resolves the dispute; on refund the buyer is compensated from the provider’s stake (slash) rather than claw‑back. Notes: • All values are in native ETH. No ERC‑20 support yet. • In production you’d add time‑outs, ERC‑20 support, upgradeability, and signature‑based off‑chain attestations.",
+			"errors": {
+				"ECDSAInvalidSignature()": [
+					{
+						"details": "The signature derives the `address(0)`."
+					}
+				],
+				"ECDSAInvalidSignatureLength(uint256)": [
+					{
+						"details": "The signature has an invalid length."
+					}
+				],
+				"ECDSAInvalidSignatureS(bytes32)": [
+					{
+						"details": "The signature has an S value that is in the upper half order."
+					}
+				]
+			},
 			"kind": "dev",
 			"methods": {
-				"buyService(uint256)": {
-					"details": "Buyer locks payment for a service. Allows multiple purchases.",
+				"claimDigest(bytes32,uint256,bytes32)": {
+					"details": "Compute the digest that a buyer must sign to authorise payment"
+				},
+				"createService(string,uint256,string,string)": {
+					"params": {
+						"description": "IPFS CID or text description `msg.value` – initial stake (must be ≥ `price`)",
+						"gateway": "Service endpoint URL",
+						"name": "Human‑readable service name (unique)",
+						"price": "Fixed price in wei"
+					}
+				},
+				"listServices()": {
 					"returns": {
-						"purchaseId": "A unique purchase identifier for further actions."
+						"ids": "Array of all service IDs"
 					}
-				},
-				"createService(uint256,string)": {
-					"details": "Provider stakes ETH and creates a service listing.",
-					"params": {
-						"gateway": "URL / CID where the AI agent can be invoked.",
-						"price": "Fixed price per purchase (in wei)."
-					}
-				},
-				"deliver(uint256,uint256,bytes32)": {
-					"details": "Provider marks deliverable for a given purchase and receives payment immediately.",
-					"params": {
-						"deliverableHash": "could be IPFS CID / SHA‑256 of encrypted artifact."
-					}
-				},
-				"raiseDispute(uint256,uint256)": {
-					"details": "Buyer escalates after delivery if unhappy with the output."
-				},
-				"resolveDispute(uint256,uint256,bool)": {
-					"details": "Arbiter decides outcome. If `refund=true` the buyer receives payment back      using a slash from provider stake. Otherwise dispute is closed."
-				},
-				"topUpStake(uint256)": {
-					"details": "Provider can add more stake at any time."
-				},
-				"withdrawStake(uint256,uint256)": {
-					"details": "Provider may withdraw excess stake when no disputes are unresolved."
 				}
 			},
-			"title": "EscroDot – minimal escrow & staking framework for AI‑agent services",
 			"version": 1
 		},
 		"userdoc": {
+			"events": {
+				"DisputeRaised(bytes32,uint256)": {
+					"notice": "Buyer flagged the purchase for dispute"
+				},
+				"DisputeResolved(bytes32,uint256,bool,address)": {
+					"notice": "Dispute resolved by an arbiter"
+				},
+				"PaymentClaimed(bytes32,uint256)": {
+					"notice": "Provider claimed the locked payment (buyer signature verified)"
+				},
+				"ServiceDeployed(bytes32,string,address,uint256)": {
+					"notice": "New service deployed"
+				},
+				"ServicePurchased(bytes32,uint256,address,uint256)": {
+					"notice": "Buyer successfully paid for the service"
+				},
+				"ServiceUpdated(bytes32,string,string)": {
+					"notice": "Service updated"
+				},
+				"StakeToppedUp(bytes32,uint256,uint256)": {
+					"notice": "Provider topped up their stake"
+				},
+				"StakeWithdrawn(bytes32,uint256,uint256)": {
+					"notice": "Provider withdrew part of their stake"
+				}
+			},
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"buyService(bytes32)": {
+					"notice": "Purchase the service by locking `price` ETH in this contract"
+				},
+				"claimPayment(bytes32,uint256,bytes32,bytes)": {
+					"notice": "Provider claims funds by presenting a buyer‑signed message"
+				},
+				"createService(string,uint256,string,string)": {
+					"notice": "Create a new service"
+				},
+				"nextPurchaseIds(bytes32)": {
+					"notice": "Map: serviceId ⇒ next purchase ID"
+				},
+				"purchases(bytes32,uint256)": {
+					"notice": "Map: serviceId ⇒ purchaseId ⇒ Purchase"
+				},
+				"resolveDispute(bytes32,uint256,bool)": {
+					"notice": "Resolve a dispute. Anyone can act as arbiter by bonding ≥ price"
+				},
+				"serviceIds(uint256)": {
+					"notice": "List of all serviceIds (for off‑chain pagination)"
+				},
+				"services(bytes32)": {
+					"notice": "Map: serviceId ⇒ Service data"
+				},
+				"stakes(bytes32)": {
+					"notice": "Map: serviceId ⇒ provider's collateral"
+				},
+				"topUpStake(bytes32)": {
+					"notice": "Increase stake for a service "
+				},
+				"updateService(bytes32,string,string)": {
+					"notice": "Update service details"
+				},
+				"withdrawStake(bytes32,uint256)": {
+					"notice": "Withdraw unused stake (cannot exceed balance held by contract)"
+				}
+			},
 			"version": 1
 		}
 	},
 	"settings": {
 		"compilationTarget": {
-			"EscroDot.sol": "EscroDot"
+			"EscroDotLite.sol": "EscroDot"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -491,12 +730,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"EscroDot.sol": {
-			"keccak256": "0x787d5b27054f6fd1203954a78c5cb674de038d1f5bef5b12d98c7aa4386cb522",
+		"EscroDotLite.sol": {
+			"keccak256": "0x034012af9c62c5484751cb61a6567c259e44328cd0983313a197e3744586e5e6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://56c10bfe8f9c227aaae85b8f217d2047a3c7499ab844e32ff3734e1449884296",
-				"dweb:/ipfs/QmTsuUv2v4framTUg3jmxvHGH8Ycv1otPmB9evqGWBuakD"
+				"bzz-raw://79e37de199140b9ccebfac51bb5618d455fdabbac20cafaaa12ec04a7c43435c",
+				"dweb:/ipfs/QmT3tU2HznwXSH5PhdoEEWvfj1JFonYZUDF65vCTC6vgi9"
 			]
 		}
 	},

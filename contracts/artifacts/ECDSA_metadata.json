@@ -1,0 +1,102 @@
+{
+	"compiler": {
+		"version": "0.8.28+commit.7893614a"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "ECDSAInvalidSignature",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "length",
+						"type": "uint256"
+					}
+				],
+				"name": "ECDSAInvalidSignatureLength",
+				"type": "error"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "s",
+						"type": "bytes32"
+					}
+				],
+				"name": "ECDSAInvalidSignatureS",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"author": "Mike Liu (mikelxc)",
+			"errors": {
+				"ECDSAInvalidSignature()": [
+					{
+						"details": "The signature derives the `address(0)`."
+					}
+				],
+				"ECDSAInvalidSignatureLength(uint256)": [
+					{
+						"details": "The signature has an invalid length."
+					}
+				],
+				"ECDSAInvalidSignatureS(bytes32)": [
+					{
+						"details": "The signature has an S value that is in the upper half order."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {},
+			"title": "EscroDot – minimal escrow & staking framework for AI‑agent servicesEscroDot – AI‑Agent Escrow (v0.4 – Buyer‑Signed Claim + Open Arbiter) • Buyer‑signed claim: `claimPayment()` is called by the provider, supplying the buyer's   signature. Contract verifies and releases payment. • Open Dispute Resolution: Any address can become an arbiter – it just needs to deposit a   stake ≥ purchase value when calling `resolveDispute()`. (For brevity we return the stake in   the same tx; extend with lock‑and‑slash logic in later versions.)",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"EscroDotLite.sol": "ECDSA"
+		},
+		"evmVersion": "cancun",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"details": {
+				"constantOptimizer": false,
+				"cse": false,
+				"deduplicate": false,
+				"inliner": false,
+				"jumpdestRemover": false,
+				"orderLiterals": false,
+				"peephole": false,
+				"simpleCounterForLoopUncheckedIncrement": true,
+				"yul": false
+			},
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"EscroDotLite.sol": {
+			"keccak256": "0x034012af9c62c5484751cb61a6567c259e44328cd0983313a197e3744586e5e6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://79e37de199140b9ccebfac51bb5618d455fdabbac20cafaaa12ec04a7c43435c",
+				"dweb:/ipfs/QmT3tU2HznwXSH5PhdoEEWvfj1JFonYZUDF65vCTC6vgi9"
+			]
+		}
+	},
+	"version": 1
+}
