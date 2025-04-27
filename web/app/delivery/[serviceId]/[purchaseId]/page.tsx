@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
@@ -8,13 +8,14 @@ import { useAccount, useSignMessage } from "wagmi"
 import { ConnectButton } from "@/components/connect-button"
 
 interface DeliveryPageProps {
-  params: {
+  params: Promise<{
     serviceId: string
     purchaseId: string
-  }
+  }>
 }
 
-export default function DeliveryPage({ params }: DeliveryPageProps) {
+export default function DeliveryPage(props: DeliveryPageProps) {
+  const params = use(props.params);
   const { serviceId, purchaseId } = params
   const { toast } = useToast()
   const { address, isConnected } = useAccount()
