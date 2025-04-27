@@ -1,6 +1,7 @@
 packages:
   - contracts
   - frontend
+  - web
 onlyBuiltDependencies:
   - esbuild
   - fsevents
